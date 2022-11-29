@@ -16,8 +16,7 @@ os.getcwd()
 os.chdir('C:\\Users\\myjoa\\Documents\\GitHub\\Data_Science_ML\\hackaton_2')
 
 # Lendo os dados
-xls = pd.ExcelFile('heart_disease.xlsx')
-df = pd.read_excel(xls, 'data')
+df = pd.read_excel('heart_disease.xlsx', 'data')
 
 df.columns
 
@@ -33,23 +32,40 @@ df_plot = df_plot.melt(id_vars="HeartDisease",
 sns.barplot(data = df_plot, x="variable", y="value", hue="HeartDisease")
 plt.show()
 
+df_plot
+
 def get_plot(variaveis):
-    
-        df_plot = df.groupby([variaveis]).mean().reset_index()
-        df_plot = df_plot.melt(id_vars=variaveis,
+    for i in variaveis:
+        
+        df_plot = df.groupby([i]).mean().reset_index()
+        df_plot = df_plot.melt(id_vars=i,
                                value_vars=["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"])
-        x = sns.barplot(data = df_plot, x="variable", y="value", hue=variaveis)
-        return(x)
+        sns.barplot(data = df_plot, x="variable", y="value", hue=i)
+        
     
-plt.show(list(df.columns))
+get_plot(df.columns)
+
+## Histograma
+def get_hist(variavel, bins):
+    plt.title(f'{variavel}')
+    plt.xlabel(f'{variavel}')
+    plt.ylabel('Frequência Absoluta')
+    plt.hist(df[f'{variavel}'], bins, rwidth=0.9)
+    plt.xticks(rotation=90)
+    plt.show()
+
+get_hist("BMI", 40)
+get_hist("PhysicalHealth", 40)
+get_hist("MentalHealth", 30)
+get_hist("SleepTime", 25)
+get_hist("AgeCategory", 13)
 
 ## correlação e heatmap das variáveis 
+
 df.corr()
 
 sns.heatmap(df.corr(), annot=True)
 
-
-df.plot
 
 
 
