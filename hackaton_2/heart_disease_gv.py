@@ -8,43 +8,43 @@ from sklearn.linear_model import SGDClassifier
 # from sklearn.model_selection import cross_val_predict
 import matplotlib.pyplot as plt
 
-data = pd.read_excel("heart_disease.xlsx", sheet_name="data")
-print(data.columns)
+df = pd.read_excel("heart_disease.xlsx", sheet_name="data")
+print(df.columns)
 
-# creating dummies
-data_model = pd.DataFrame({"HeartDisease": np.where(data["HeartDisease"] == "Yes", 1, 0),
-                           "Smoking": np.where(data["Smoking"] == "Yes", 1, 0),
-                           "AlcoholDrinking": np.where(data["AlcoholDrinking"] == "Yes", 1, 0),
-                           "Stroke": np.where(data["Stroke"] == "Yes", 1, 0),
-                           "DiffWalking": np.where(data["DiffWalking"] == "Yes", 1, 0),
-                           "Sex": np.where(data["Sex"] == "Yes", 1, 0),
-                           "PhysicalActivity": np.where(data["PhysicalActivity"] == "Yes", 1, 0),
-                           "KidneyDisease": np.where(data["KidneyDisease"] == "Yes", 1, 0),
-                           "SkinCancer": np.where(data["SkinCancer"] == "Yes", 1, 0),
-                           "Asthma": np.where(data["Asthma"] == "Yes", 1, 0)})
+# criando dummies
+data_model = pd.DataFrame({"HeartDisease": np.where(df["HeartDisease"] == "Yes", 1, 0),
+                           "Smoking": np.where(df["Smoking"] == "Yes", 1, 0),
+                           "AlcoholDrinking": np.where(df["AlcoholDrinking"] == "Yes", 1, 0),
+                           "Stroke": np.where(df["Stroke"] == "Yes", 1, 0),
+                           "DiffWalking": np.where(df["DiffWalking"] == "Yes", 1, 0),
+                           "Sex": np.where(df["Sex"] == "Yes", 1, 0),
+                           "PhysicalActivity": np.where(df["PhysicalActivity"] == "Yes", 1, 0),
+                           "KidneyDisease": np.where(df["KidneyDisease"] == "Yes", 1, 0),
+                           "SkinCancer": np.where(df["SkinCancer"] == "Yes", 1, 0),
+                           "Asthma": np.where(df["Asthma"] == "Yes", 1, 0)})
 
-data_model["BMI"] = data["PhysicalHealth"]
-data_model["PhysicalHealth"] = data["PhysicalHealth"]
-data_model["MentalHealth"] = data["MentalHealth"]
-data_model["SleepTime"] = data["SleepTime"]
+# dummies numéricas
+data_model["BMI"] = df["PhysicalHealth"]
+data_model["PhysicalHealth"] = df["PhysicalHealth"]
+data_model["MentalHealth"] = df["MentalHealth"]
+data_model["SleepTime"] = df["SleepTime"]
 
-# last categorical
-data_model["AgeCategory"] = data["AgeCategory"]
-data_model["Race"] = data["Race"]
-data_model["Diabetic"] = data["Diabetic"]
-data_model["GenHealth"] = data["GenHealth"]
+# inclundo as cariaveis para dummies com mais de 2 categorias
+data_model["AgeCategory"] = df["AgeCategory"]
+data_model["Race"] = df["Race"]
+data_model["Diabetic"] = df["Diabetic"]
+data_model["GenHealth"] = df["GenHealth"]
 
 data_model = pd.get_dummies(data_model)
  
-# Creating model
+# determinando variaveis explicatiavas e variaveis dependentes
 y = data_model.HeartDisease
 X = data_model.drop("HeartDisease", axis=1)
+
+# separando dados de teste e treino
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-# test and train
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
-
-# Create classifiers
+# 
 
 # SVM
 svm_clf = SGDClassifier(max_iter=1000, tol=1e-3, random_state=1, loss="huber")
@@ -91,6 +91,7 @@ top3_log = coef_log.sort_values(by="Values").tail(3)
 print(top3_svm)
 print(top3_log)
 
+# influenciam negativamente
 print(last3_svm)
 print(last3_log)
 
